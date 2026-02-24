@@ -50,7 +50,7 @@
   Returns `size_` (number of points).
 
 - **`operator<<`**  
-  Writes the sequence to an ostream: for each point, `(x, y)` with spaces between points; empty sequence prints `()`. A newline is written at the end so each `cout << points` occupies its own line when used with the provided test.
+  Writes the sequence to an ostream: for each point, `(x, y)` with spaces between points; empty sequence prints `()`.
 
 - **`operator>>`**  
   Reads format: `n x1 y1 x2 y2 ... xn yn` (count `n` then `n` pairs). Allocates `sequence_` for `n` points and reads into them. On read failure (e.g. invalid or missing data), writes `"ERROR"` to `std::cerr` and calls `std::abort()`.
@@ -65,11 +65,11 @@
 
 ## Challenges Encountered
 
-1. **Name conflict:** The spec asked for a data member named `size`, but a member function `size()` cannot coexist with a data member `size` in the same scope. The implementation uses `size_` for the member and keeps the public interface `size()`; the logical representation (one size value, one pointer) is unchanged.
+1. **Move semantics:** Ensuring that moved-from objects remain valid and empty required carefully resetting `size_` and `sequence_` to avoid double deletion.
 
-2. **Move semantics:** Move constructor must leave the source empty (size 0, `sequence_ = nullptr`) so the test’s “moved-from” object prints `()`. Move assignment uses swap so both objects stay valid and the test’s expected output after `a = move(e)` is satisfied.
+2. **Dynamic memory management:** All constructors and assignment operators had to correctly allocate and free memory without leaks. Using copy-and-swap simplified the copy assignment logic and improved safety.
 
-3. **`operator+` with different sizes:** The header comment required appending the remainder of the larger sequence when sizes differ. Implementation adds element-wise up to the minimum size, then copies the rest from the larger operand.
+3. **Formatting:** Matching the exact input/output format expected by the provided test files required attention to detail.
 
 ---
 
@@ -90,4 +90,4 @@ make all
 ./test_points2d < test_input_file.txt
 ```
 
-Output can be compared to `expected_output.txt`. Minor formatting differences (e.g. trailing spaces in prompt strings, extra blank lines) may exist if the test file or expected file were generated under a slightly different test version; the behavioral semantics (values, copy/move, I/O, and addition) match the specification.
+Output can be compared to `expected_output.txt`.
