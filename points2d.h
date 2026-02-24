@@ -113,7 +113,7 @@ class Points2D {
 
     friend std::ostream &operator<<(std::ostream &out, const Points2D &some_points) {
       if (some_points.size_ == 0) {
-        out << "()\n";
+        out << "()" << std::endl;
         return out;
       }
       
@@ -122,7 +122,7 @@ class Points2D {
             << some_points.sequence_[i][1] << ")";
         if (i + 1 < some_points.size_) out << " ";
       }
-      out << "\n";
+      out << std::endl;
       return out;
     }
 
