@@ -1,5 +1,11 @@
-// --> YOUR NAME here
-// Few comments describing the class Points2D
+// Abkariyyah Ahmed
+/*
+Points2D is a template class that represents a dynamically allocated
+sequence of 2D points. Each point is stored as a std::array<Object, 2>,
+where Object is the template parameter (e.g., int, double).
+The class manages its own memory and follows the Rule of Five to ensure
+proper deep copying and safe move semantics.
+*/
 
 #ifndef CSCI335_HOMEWORK1_POINTS2D_H_
 #define CSCI335_HOMEWORK1_POINTS2D_H_
@@ -16,6 +22,7 @@ namespace teaching_project {
 // Points2D: dynamically allocated sequence of 2D points.
 // Each point is std::array<Object, 2>. Supports Big Five, stream I/O, and +.
 template<typename Object>
+
 class Points2D {
   public:
     // Zero-parameter constructor. Set size to 0, sequence_ to nullptr.
@@ -84,15 +91,18 @@ class Points2D {
       size_t m = (c1.size_ < c2.size_) ? c1.size_ : c2.size_;
       Points2D result;
       result.size_ = n;
+      
       if (n > 0) {
         result.sequence_ = new std::array<Object, 2>[n];
         for (size_t i = 0; i < m; ++i) {
           result.sequence_[i][0] = c1.sequence_[i][0] + c2.sequence_[i][0];
           result.sequence_[i][1] = c1.sequence_[i][1] + c2.sequence_[i][1];
         }
+        
         if (c1.size_ > c2.size_) {
           for (size_t i = m; i < n; ++i)
             result.sequence_[i] = c1.sequence_[i];
+        
         } else if (c2.size_ > c1.size_) {
           for (size_t i = m; i < n; ++i)
             result.sequence_[i] = c2.sequence_[i];
@@ -106,6 +116,7 @@ class Points2D {
         out << "()\n";
         return out;
       }
+      
       for (size_t i = 0; i < some_points.size_; ++i) {
         out << "(" << some_points.sequence_[i][0] << ", "
             << some_points.sequence_[i][1] << ")";
@@ -115,19 +126,24 @@ class Points2D {
       return out;
     }
 
-    // Format: n x1 y1 x2 y2 ... xn yn. On invalid input: "ERROR" to stderr and abort.
+    
+  // Format: n x1 y1 x2 y2 ... xn yn. On invalid input: "ERROR" to stderr and abort.
     friend std::istream &operator>>(std::istream &in, Points2D &some_points) {
       size_t n = 0;
       if (!(in >> n)) {
         std::cerr << "ERROR";
         std::abort();
       }
+      
       delete[] some_points.sequence_;
       some_points.sequence_ = nullptr;
       some_points.size_ = 0;
+      
       if (n == 0) return in;
+      
       some_points.sequence_ = new std::array<Object, 2>[n];
       some_points.size_ = n;
+      
       for (size_t i = 0; i < n; ++i) {
         if (!(in >> some_points.sequence_[i][0] >> some_points.sequence_[i][1])) {
           std::cerr << "ERROR";
