@@ -52,10 +52,15 @@ class Points2D {
       rhs.sequence_ = nullptr;
     }
 
-    // Move-assignment. Swap so both objects remain valid.
+    // Move-assignment. Steal resources; leave rhs empty.
     Points2D& operator=(Points2D &&rhs) noexcept {
-      std::swap(size_, rhs.size_);
-      std::swap(sequence_, rhs.sequence_);
+      if (this != &rhs) {
+        delete[] sequence_;
+        sequence_ = rhs.sequence_;
+        size_ = rhs.size_;
+        rhs.sequence_ = nullptr;
+        rhs.size_ = 0;
+      }
       return *this;
     }
 
@@ -116,11 +121,9 @@ class Points2D {
         out << "()" << std::endl;
         return out;
       }
-      
       for (size_t i = 0; i < some_points.size_; ++i) {
         out << "(" << some_points.sequence_[i][0] << ", "
-            << some_points.sequence_[i][1] << ")";
-        if (i + 1 < some_points.size_) out << " ";
+            << some_points.sequence_[i][1] << ") ";
       }
       out << std::endl;
       return out;
@@ -131,7 +134,7 @@ class Points2D {
     friend std::istream &operator>>(std::istream &in, Points2D &some_points) {
       size_t n = 0;
       if (!(in >> n)) {
-        std::cerr << "ERROR";
+        std::cerr << "ERROR" << std::endl;
         std::abort();
       }
       
@@ -146,7 +149,7 @@ class Points2D {
       
       for (size_t i = 0; i < n; ++i) {
         if (!(in >> some_points.sequence_[i][0] >> some_points.sequence_[i][1])) {
-          std::cerr << "ERROR";
+          std::cerr << "ERROR" << std::endl;
           std::abort();
         }
       }
