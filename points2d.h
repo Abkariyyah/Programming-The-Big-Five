@@ -28,7 +28,7 @@ class Points2D {
     // Zero-parameter constructor. Set size to 0, sequence_ to nullptr.
     Points2D() : size_(0), sequence_(nullptr) {}
 
-    // Copy-constructor. Deep copy of rhs.
+    // Copy-constructor - Deep copy of rhs.
     Points2D(const Points2D &rhs) : size_(rhs.size_), sequence_(nullptr) {
       if (rhs.size_ > 0) {
         sequence_ = new std::array<Object, 2>[rhs.size_];
@@ -37,7 +37,7 @@ class Points2D {
       }
     }
 
-    // Copy-assignment. Copy-and-swap for strong exception safety.
+    // Copy-assignment - Copy-and-swap 
     Points2D& operator=(const Points2D &rhs) {
       Points2D copy = rhs;
       std::swap(size_, copy.size_);
@@ -45,14 +45,14 @@ class Points2D {
       return *this;
     }
 
-    // Move-constructor. Steal resources; leave rhs empty (valid but empty).
+    // Move-constructor - Steal resources and leave rhs valid but empty.
     Points2D(Points2D &&rhs) noexcept
         : size_(rhs.size_), sequence_(rhs.sequence_) {
       rhs.size_ = 0;
       rhs.sequence_ = nullptr;
     }
 
-    // Move-assignment. Steal resources; leave rhs empty.
+    // Move-assignment - Steal resources and leave rhs empty.
     Points2D& operator=(Points2D &&rhs) noexcept {
       if (this != &rhs) {
         delete[] sequence_;
@@ -69,7 +69,7 @@ class Points2D {
       sequence_ = nullptr;
     }
 
-    // One parameter constructor: single point.
+    // One parameter constructor - single point.
     Points2D(const std::array<Object, 2>& item) : size_(1), sequence_(nullptr) {
       sequence_ = new std::array<Object, 2>[1];
       sequence_[0] = item;
@@ -90,7 +90,7 @@ class Points2D {
       return sequence_[location];
     }
 
-    // Element-wise sum; if sizes differ, append remainder from larger sequence.
+    // Element-wise sum - so if sizes differ, append remainder from larger sequence.
     friend Points2D operator+(const Points2D &c1, const Points2D &c2) {
       size_t n = (c1.size_ < c2.size_) ? c2.size_ : c1.size_;
       size_t m = (c1.size_ < c2.size_) ? c1.size_ : c2.size_;
